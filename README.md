@@ -34,7 +34,7 @@ Name | Description
 Wemos D1 Mini ESP32 | Microcontroller Board
 MicroSD Card Module | MicroSD card read and write
 MicroSD Card 32GB | Micro SD card to store the credentials
-OS-1838B IR receiver | Sensor to receive infrared signals
+OS-1838B / VS1838B IR receiver | Sensor to receive infrared signals
 PCB | PCB as platform for all modules
 Several connectors for PCB | Connecting modules with PCB
 
