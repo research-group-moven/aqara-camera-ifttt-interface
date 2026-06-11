@@ -2,8 +2,6 @@
 
 The Aqara Camera Hub G3 offers AI driven features such as face or pet detection. Unfortunately these triggers cannot be setup (at least in Europe) in IFTTT to create an applet. The present device allows to bypass the usual way making use of the IR functionality of the camera. After setting up an automation in the Aqara Home app, the camera sends an IR signal triggered by an AI event (e.g. known face detected). The IR sensor of the device recieves the signal and the ESP32 calls the webhook of IFTTT.
 
-Current version: 0.1.0
-
 ## Setup
 
 Coming soon.
@@ -46,6 +44,12 @@ Coming soon.
 
 ## Todo
 
-- [ ] Add licence
 - [ ] Create and add PCB
 - [ ] Add circuit
+- [ ] Improve code
+    - [ ] Become independent of specifically simulating the IR signals of an LG TV (IR Address 4 and number buttons 16–25 instead of 0–9)
+
+## License
+
+This project is licensed under the GPL-3.0 License.
+© Till Maria Jürgens / MOVEN Research Group, Rhine-Waal University of Applied Sciences
