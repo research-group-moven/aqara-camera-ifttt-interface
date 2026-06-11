@@ -30,13 +30,12 @@ String ifttt_event_prefix;
 #define IR_RECEIVE_PIN  17
 
 // IFTTT connection
-WiFiClient client;
 #define HOST "maker.ifttt.com"
 #define PORT 80
 
 
 /*
-Pseudo-decode of commands from the number buttons 0 – 9 that are coded into 16 – 25
+Pseudo-decoding of commands from the number buttons 0–9 that are coded as 16–25 in the case of an LG TV.
 */
 String decode_command(int command) {
   int command_decoded = command - 16;
@@ -47,6 +46,8 @@ String decode_command(int command) {
 Call IFTTT trigger with JSON data
 */
 void send_webhook(int address, int command) {
+  WiFiClient client;
+
   if (address != IR_REMOTE_ID) {
     return;
   }
@@ -109,7 +110,7 @@ void setup() {
   File file = SD.open("/wifi.txt");
   if(!file){
     Serial.println("Failed to open file");
-    return;
+    while (1);
   }
 
   // parse credentials, format "ssid,password,ifttt_key"
@@ -125,6 +126,7 @@ void setup() {
   password = content.substring(firstComma + 1, secondComma);
   ifttt_event_prefix = content.substring(secondComma + 1, thirdComma);
   ifttt_key = content.substring(thirdComma + 1);
+  ifttt_key.trim();
   
   /*
   Init WiFi
@@ -144,7 +146,7 @@ void setup() {
     switch (WiFi.status()) {
       case WL_NO_SSID_AVAIL: Serial.println("[WiFi] SSID not found"); break;
       case WL_CONNECT_FAILED:
-        Serial.print("[WiFi] Failed - WiFi not connected! Reason: ");
+        Serial.println("[WiFi] Failed - WiFi not connected!");
         break;
       case WL_CONNECTION_LOST: Serial.println("[WiFi] Connection was lost"); break;
       case WL_SCAN_COMPLETED:  Serial.println("[WiFi] Scan is completed"); break;
