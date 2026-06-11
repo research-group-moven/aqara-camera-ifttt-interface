@@ -4,7 +4,7 @@
  * Purpose: This interface allows using the AI functions of the Aqara Camera, such as face detection, as a trigger for IFTTT applets.
  * 
  * @author Till Maria Jürgens
- * @version 0.1.0
+ * @version 0.1.1
  * 
  * This project is developed and used in a student project by the MOVEN research group at the chair of Design Digital Media, Rhine-Waal University of Applied Sciences. More information: https://www.sustainabilitybydesign.net/moven
 */
