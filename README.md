@@ -1,53 +1,85 @@
 # Aqara camera IFTTT interface
 
-The Aqara Camera Hub G3 offers AI driven features such as face or pet detection. Unfortunately these triggers cannot be setup (at least in Europe) in IFTTT to create an applet. The present device allows to bypass the usual way making use of the IR functionality of the camera. After setting up an automation in the Aqara Home app, the camera sends an IR signal triggered by an AI event (e.g. known face detected). The IR sensor of the device recieves the signal and the ESP32 calls the webhook of IFTTT.
+The Aqara Camera Hub G3 offers AI-driven features such as face or pet detection. Unfortunately, these events cannot be used as triggers in IFTTT (at least in Europe). This project provides a workaround by making use of the camera's built-in IR functionality.
+
+After setting up an automation in the Aqara Home app, the camera sends an IR signal when an AI event occurs (e.g. a specified face is detected). The IR sensor of this device receives the signal, and the ESP32 calls an IFTTT webhook in response, effectively bridging the Aqara ecosystem with any IFTTT-connected service.
+
+> **Prerequisites:** Aqara Home App, IFTTT pro account
+
+## How it works
+
+The Aqara Home app allows the camera to imitate a TV remote control and send infrared signals. This project uses a virtual LG TV remote, where each number button (0–9) corresponds to a different AI event. The IR codes for these buttons use command values 16–25 (an LG-specific encoding), which the ESP32 decodes back to 0–9 before constructing the IFTTT webhook URL.
+
+This allows up to 10 different AI events to trigger separate IFTTT applets.
 
 ## Setup
 
-Coming soon.
+To use the interface you need the Aqara Home App and an IFTTT pro account to enable webhooks.
 
 ### Virtual TV remote control in Aqara Home App
-The camera can imitate a TV remote control and send infrared signals. In this way we can make use of the number buttons of the remote control and up to 10 camera AI events can trigger other events via IFTTT. To set up the remote control you navigate to the camera in the Aqara Home app and select the button Infrared Remote Control in the bottom of the camera interface. On the bottom you can add a new remote control. Select under TV the brand LG as every company uses unique codes and we picked LG as the interface for this setup. The app asks for a test of the connection, you just have to confirm everything and follow the instructions.
+1. Open the Aqara Home app and navigate to your camera.
+2. Tap **Infrared Remote Control** at the bottom of the camera interface.
+3. Add a new remote control and select **TV → LG**. LG is required as each brand uses unique IR codes and this project is built around LG's encoding.
+4. Confirm the connection test and follow the on-screen instructions.
 
 ### Infrared Remote Control Sensor
-Write a text file wifi.txt on the SD card with credentials in the following pattern:
+Create a plain text file named `wifi.txt` on a MicroSD card with the following format:
 
-``WiFi name,WiFi-password,IFTTT-event,IFTTT-key``
+```
+WiFi-name,WiFi-password,IFTTT-event-prefix,IFTTT-key
+```
 
-Set up your personal WiFi name and password. Add the IFTTT API key of the webhook that you find under Settings of the webhook service. Use only the cryptic key after ``[...]/use/…``. Instead of ``IFTTT-event`` you can choose any name (e.g., ``my_trigger_``) that is used later as the name of the trigger followed by a number between 0 and 9.
+| Field | Description |
+|---|---|
+| `WiFi-name` | Your WiFi network name (SSID) |
+| `WiFi-password` | Your WiFi password |
+| `IFTTT-event-prefix` | A prefix for your IFTTT event names, e.g. `my_trigger_` |
+| `IFTTT-key` | Your IFTTT Webhook API key (found at `https://maker.ifttt.com/use/YOUR_KEY_HERE`) |
 
-### Camera AI events
+**Example:**
+```
+MyNetwork,secret123,my_trigger_,abc123xyz
+```
 
-#### Aqara Home app
+### Camera AI automations in Aqara Home
 
-After all devices are set up in the Aqara Home app you can create automations with the plus sign in the section Automation. You can select the camera under Accessories as a trigger (When) and a specific event (e.g., Specified face detected). As an action (Then) you can select the virtual remote control and add a remote control button between 0 and 9. 
+1. Go to **Automation** in the Aqara Home app and tap the **+** button.
+2. Select your camera under **Accessories** as the trigger (**When**) and choose an AI event (e.g. *Specified face detected*).
+3. As the action (**Then**), select the virtual LG remote and assign a button between **0 and 9**.
 
-#### IFTTT
+#### IFTTT setup
 
-According to the number you have to set up an applet with webhook (“Receive a web request”) as trigger (If) and name the event as following: “[IFTTT-event][0 – 9]”, e.g., “my_trigger_1”. More specifically: The IFTTT-event name you previously set up on the SD card and followed by a number from 0 to 9 is attached to the name, referring to the buttons on the virtual remote control. This allows for 10 different triggers by the AI functionality of the camera. Finally you can choose any service as output (Then).
-
+1. Create a new applet with **Webhooks** ("Receive a web request") as the trigger.
+2. Name the event using your chosen prefix followed by a number, e.g. `my_trigger_1`.
+3. Choose any service as the output (**Then**).
 
 ## List of parts
 
-Name | Description
----|---
-Wemos D1 Mini ESP32 | Microcontroller Board
-MicroSD Card Module | MicroSD card read and write
-MicroSD Card 32GB | Micro SD card to store the credentials
-OS-1838B / VS1838B IR receiver | Sensor to receive infrared signals
-PCB | PCB as platform for all modules
-Several connectors for PCB | Connecting modules with PCB
+| Name | Description |
+|---|---|
+| Wemos D1 Mini ESP32 | Microcontroller board |
+| MicroSD Card Module | SPI-based MicroSD card reader |
+| MicroSD Card (≤32GB) | Stores the credentials file |
+| VS1838B / OS-1838B IR Receiver | Infrared signal sensor |
+| PCB | Carrier board for all modules |
+| Connectors | For connecting modules to the PCB |
+| USB cable | Powers the microcontroller |
 
-## Circuit
+## Carrier board for all modules
 
-Coming soon.
+### Circuit
+
+![Circuit of the carrier board for the modules](/assets/images/circuit.png)
+
+### Handmade PCB
+
+![Handmade PCB](/assets/images/pcb.png)
 
 ## Todo
 
-- [ ] Create and add PCB
-- [ ] Add circuit
 - [ ] Improve code
     - [ ] Become independent of specifically simulating the IR signals of an LG TV (IR Address 4 and number buttons 16–25 instead of 0–9)
+- [ ] Create PCB for production
 
 ## License
 
